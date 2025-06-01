@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="text-center">Прогноз урожайності за регіоном</h2>
+
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" class="mt-4">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="region">Регіон:</label>
+        <select name="region" id="region" class="form-control">
+          {% for r in regions %}
+            <option value="{{ r }}" {% if selected_region == r %}selected{% endif %}>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group mt-3">
+        <label>Температура (°C):</label>
+        <input type="number" step="0.1" name="temperature" class="form-control" placeholder="Наприклад, 22.5">
+      </div>
+
+      <div class="form-group mt-3">
+        <label>Опади (мм):</label>
+        <input type="number" step="0.1" name="rainfall" class="form-control" placeholder="Наприклад, 80.2">
+      </div>
+
+      <div class="form-group mt-3">
+        <label>УФ-індекс:</label>
+        <input type="number" step="0.1" name="uv_index" class="form-control" placeholder="Наприклад, 5.3">
+      </div>
+
+      <div class="form-group mt-3">
+        <label>Якість ґрунту (0–1):</label>
+        <input type="number" step="0.01" name="soil_quality" class="form-control" placeholder="Наприклад, 0.75">
+      </div>
+
+      <button type="submit" class="btn btn-primary mt-4">Отримати прогноз</button>
+    </form>
+
+    {% if result %}
+      <div class="alert alert-success mt-4">
+        <strong>Прогнозована урожайність:</strong> {{ result }}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,6 @@
+year,region,crop,temperature,rainfall,uv_index,yield_value
+2018,Kyiv,Wheat,13.5,410,5.2,36.0
+2019,Kyiv,Wheat,14.0,420,5.5,37.2
+2020,Kyiv,Wheat,14.7,430,5.7,38.5
+2021,Kyiv,Wheat,15.1,440,6.0,39.1
+2022,Kyiv,Wheat,15.5,460,6.2,40.0

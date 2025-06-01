@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 text-light">
+  <h2 class="text-center mb-4">Моделі машинного навчання за <span class="text-info">{{ mode }}</span></h2>
+
+  <form method="get" class="d-flex justify-content-center mb-4">
+  <select name="mode" class="form-select w-auto bg-dark text-light border-info" onchange="window.location.href = '/ml/' + this.value + '/'">
+    <option value="region" {% if mode == 'region' %}selected{% endif %}>По регіонах</option>
+    <option value="crop" {% if mode == 'crop' %}selected{% endif %}>По культурах</option>
+  </select>
+</form>
+
+  {% if models %}
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-bordered align-middle">
+        <thead class="table-dark text-light">
+          <tr>
+            <th>{{ mode|title }}</th>
+            <th>R²</th>
+            <th>Зразків</th>
+            <th>Коефіцієнти</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in models %}
+          <tr>
+            <td>
+              {% if mode == 'region' %}
+                {{ m.region }}
+              {% else %}
+                {{ m.crop }}
+              {% endif %}
+            </td>
+            <td>{{ m.r2_score }}</td>
+            <td>{{ m.sample_size }}</td>
+            <td>
+              <ul class="mb-0">
+                {% for key, value in m.coefficients.items %}
+                <li><strong>{{ key }}:</strong> {{ value|floatformat:3 }}</li>
+                {% endfor %}
+              </ul>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center">Недостатньо даних для тренування моделей.</div>
+  {% endif %}
+</div>
+{% endblock %}

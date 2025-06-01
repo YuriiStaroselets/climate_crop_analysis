@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Головна | ClimateCrop{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  {% if has_data %}
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title text-center">🌍 Останні дані по регіонах</h2>
+        <div id="map" style="height: 500px;"></div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center mt-5">
+      <h3 class="mb-4">Немає доступних даних</h3>
+      <a class="btn btn-warning btn-lg" href="{% url 'upload' %}">📥 Завантажити CSV</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {% if has_data %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      const map = L.map('map').setView([48.3794, 31.1656], 6);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      const regions = {{ map_data|safe }};
+
+      regions.forEach(r => {
+        L.marker([r.lat, r.lon])
+          .addTo(map)
+          .bindPopup(`<b>${r.region}</b><br>Урожайність: ${r.yield}`);
+      });
+    </script>
+  {% endif %}
+{% endblock %}

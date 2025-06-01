@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center">🌍 Карта врожайності по регіонах</h2>
+  <div id="map" style="height: 600px;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const map = L.map('map').setView([48.3794, 31.1656], 6); // центр України
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const regions = {{ regions|safe }};
+
+    regions.forEach(r => {
+      const color = r.yield > 5 ? 'green' : r.yield > 3 ? 'orange' : 'red';
+
+      const circle = L.circleMarker([r.latitude, r.longitude], {
+        radius: 8,
+        color: color,
+        fillOpacity: 0.7
+      }).addTo(map);
+
+      circle.bindPopup(`<b>${r.region}</b><br>Культура: ${r.crop}<br>Урожайність: ${r.yield}`);
+    });
+  });
+</script>
+{% endblock %}
